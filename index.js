@@ -8,7 +8,8 @@ const app = express();
 const SECRET = 'thisismysecret'
 
 const registerUser = {
-    'velin': '$2b$10$R1DG5zyaq/Mh51prvj7NcuZKNFrneNvHTmC7sHcah2yBvm7C5Kp3S'
+    'velin': '$2b$10$R1DG5zyaq/Mh51prvj7NcuZKNFrneNvHTmC7sHcah2yBvm7C5Kp3S',
+    'ivan': '$2b$10$lLZzeRVe8hxd.qVgFIplX.juqunyyB6T1LU6zHR6j9mDq3E/oIEt6'
 }
 
 app.use(express.urlencoded({extended:false}))
@@ -182,11 +183,11 @@ app.post('/login', async(req, res) => {
 
       const jwtToken = jwt.sign(payload, SECRET, {expiresIn: '2h'});
 
-      res.cookie('auth', jwtToken)
       
-    //   res.send(`Welcome ${username}`)
-
+      //   res.send(`Welcome ${username}`)
+      
       if (isValid) {
+          res.cookie('auth', jwtToken);
         return res.redirect('/profile')
       } else {
         res.send('INVALID PASSWORD')
@@ -197,9 +198,9 @@ app.post('/login', async(req, res) => {
 ///////////////////////////////
 //////////////// PROFILE
 //////////////////////////////
-app.get('/profile', (req, res) => {
+app.get('/profile', async(req, res) => {
 //    000 Authenticated user
-const jwtToken = req.cookie['auth'];
+const jwtToken = await req.cookies['auth'];
 if (!jwtToken) {
     res.status(401).send('<h1>Unauthorize</h1>')
 }
@@ -207,8 +208,29 @@ if (!jwtToken) {
 try {
     const decodedToken = jwt.verify(jwtToken, SECRET);
 
-    res.send(`Welcome ${username}`)
-    console.log(decodedToken);
+    res.send(`
+
+        <header>
+      <nav>
+        <a href="/">HOME</a> <span>  </span>
+        <a href="/register">REGISTER</a
+        > <span>  </span>
+        <a href="/login">LOGIN</a>
+      </nav>
+    </header>
+    <hr />
+    <h1>Welcome ${decodedToken.username}</h1>
+    <hr />
+    <div class="container">
+      <h2>You are in Your Profile</h2>
+      <p class="home-text">Some Text here...</p>
+      <a href="/login" class="link">Login</a>
+      <a href="/register" class="link">Register</a>
+    </div>
+    <hr />
+    <footer>
+      <p class="footer-text">&copy; All rights reserved</p>
+    </footer> `)
     
 } catch (error) {
     console.log(error.message);
