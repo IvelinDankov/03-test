@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/">Home</a><a href="/register">register</a
+        ><a href="/login">login</a>
+      </nav>
+    </header>
+    <hr />
+    <h1>Welcome to Home Page</h1>
+    <hr />
+    <div class="container">
+      <h2>Authentication and Authorization</h2>
+      <p class="home-text">lorem25</p>
+      <a href="/register" class="link">Register</a>
+    </div>
+    <hr />
+    <footer>
+      <p class="footer-text">&copy; All rights reserved</p>
+    </footer>
+
+    <section class="login">
+      <header>
+        <nav>
+          <a href="/">Home</a><a href="/register">register</a
+          ><a href="/login">login</a>
+        </nav>
+      </header>
+      <h2 class="login-title">Login Page</h2>
+      <hr />
+      <fieldset>
+        <legend>Login</legend>
+        <form method="post">
+          <div class="form-box">
+            <label for="name">Name: </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              placeholder="Your Name"
+              required
+            />
+          </div>
+
+          <div class="form-box">
+            <label for="name">Password: </label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Your Password"
+              required
+            />
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </fieldset>
+    </section>
+
+    <!-- Register section -->
+
+    <section class="register">
+        <header>
+          <nav>
+            <a href="/">Home</a><a href="/register">register</a
+            ><a href="/register">Register</a>
+          </nav>
+        </header>
+        <h2 class="register-title">Register Page</h2>
+        <hr />
+        <fieldset>
+          <legend>Register</legend>
+          <form method="post">
+            <div class="form-box">
+              <label for="name">Name: </label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Your Name"
+                required
+              />
+            </div>
+  
+            <div class="form-box">
+              <label for="password">Password: </label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Your Password"
+                required
+              />
+            </div>
+            <div class="form-box">
+              <label for="rePass">Re-Password: </label>
+              <input
+                type="password"
+                name="rePass"
+                id="rePass"
+                placeholder="Repeat Password"
+                required
+              />
+            </div>
+            <button type="submit">Register</button>
+          </form>
+        </fieldset>
+      </section>
+  </body>
+</html>
