@@ -1,6 +1,16 @@
 import express from "express";
+import cookieParser from "cookie-parser";
+import bcrypt from "bcrypt";
 
 const app = express();
+
+const registerUser = {
+
+}
+
+app.use(express.urlencoded({extended:false}))
+
+app.use(cookieParser())
 
 ///////////////////////////////
 //////////////// HOME
@@ -56,7 +66,7 @@ app.get("/register", (req, res) => {
               <label for="name">Name: </label>
               <input
                 type="text"
-                name="name"
+                name="username"
                 id="name"
                 placeholder="Your Name"
                 required
@@ -90,6 +100,21 @@ app.get("/register", (req, res) => {
         `);
 });
 
+app.post('/register', async(req, res) => {
+    // take user data from form but not forget to 
+   const {username, password, rePass} = req.body;
+
+    //salt generate
+    const salt = await bcrypt.genSalt(10);
+    // make hash password
+    const passHash = await bcrypt.hash(password, salt);
+    
+    // save password... 
+    registerUser[username] = passHash;
+
+   res.redirect('/login');
+});
+
 ///////////////////////////////
 //////////////// LOGIN
 //////////////////////////////
@@ -112,7 +137,7 @@ app.get('/login', (req, res) => {
             <label for="name">Name: </label>
             <input
               type="text"
-              name="name"
+              name="username"
               id="name"
               placeholder="Your Name"
               required
@@ -134,6 +159,23 @@ app.get('/login', (req, res) => {
       </fieldset>
     </section>
     `)
+});
+
+app.post('/login', async(req, res) => {
+    // 1. take username & pass
+   const {username, password} = req.body;
+    // 2. Check if user is registered. HOW?
+    if (!registerUser[username]) {
+        res.status(400).send('User not Exist');
+    } else {
+      const isValid = await bcrypt.compare(password, registerUser[username]);
+
+      if (isValid) {
+        res.send(`Welcome ${username}`)
+      } else {
+        res.send('INVALID PASSWORD')
+      }
+    }
 });
 
 app.listen(5000, () => console.log(`Server is listening on port 5000`));
