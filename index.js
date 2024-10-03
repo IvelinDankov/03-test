@@ -1,11 +1,14 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const app = express();
 
-const registerUser = {
+const SECRET = 'thisismysecret'
 
+const registerUser = {
+    'velin': '$2b$10$R1DG5zyaq/Mh51prvj7NcuZKNFrneNvHTmC7sHcah2yBvm7C5Kp3S'
 }
 
 app.use(express.urlencoded({extended:false}))
@@ -108,6 +111,8 @@ app.post('/register', async(req, res) => {
     const salt = await bcrypt.genSalt(10);
     // make hash password
     const passHash = await bcrypt.hash(password, salt);
+    console.log(passHash);
+    
     
     // save password... 
     registerUser[username] = passHash;
@@ -170,12 +175,49 @@ app.post('/login', async(req, res) => {
     } else {
       const isValid = await bcrypt.compare(password, registerUser[username]);
 
+      const payload = {
+        username,
+        admin: true
+      }
+
+      const jwtToken = jwt.sign(payload, SECRET, {expiresIn: '2h'});
+
+      res.cookie('auth', jwtToken)
+      
+    //   res.send(`Welcome ${username}`)
+
       if (isValid) {
-        res.send(`Welcome ${username}`)
+        return res.redirect('/profile')
       } else {
         res.send('INVALID PASSWORD')
       }
     }
+});
+
+///////////////////////////////
+//////////////// PROFILE
+//////////////////////////////
+app.get('/profile', (req, res) => {
+//    000 Authenticated user
+const jwtToken = req.cookie['auth'];
+if (!jwtToken) {
+    res.status(401).send('<h1>Unauthorize</h1>')
+}
+
+try {
+    const decodedToken = jwt.verify(jwtToken, SECRET);
+
+    res.send(`Welcome ${username}`)
+    console.log(decodedToken);
+    
+} catch (error) {
+    console.log(error.message);
+    
+}
+
+
+
+// 001 Return User related data
 });
 
 app.listen(5000, () => console.log(`Server is listening on port 5000`));
